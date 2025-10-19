@@ -95,53 +95,52 @@ export function DesignPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-64px)] flex overflow-hidden bg-gray-50">
-      {/* Left Panel - アイテムライブラリ */}
-      <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto">
-        <LeftPanel />
-      </div>
-
-      {/* Center - キャンバス */}
-      <div className="flex-1 flex flex-col">
-        {/* Toolbar */}
-        <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="secondary" onClick={handleSave}>
-              💾 保存
-            </Button>
-            <Button size="sm" variant="ghost" onClick={undo} disabled={!canUndo()}>
-              ↶
-            </Button>
-            <Button size="sm" variant="ghost" onClick={redo} disabled={!canRedo()}>
-              ↷
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="secondary" onClick={handleExportPNG}>
-              PNG
-            </Button>
-            <Button size="sm" variant="secondary" onClick={handleExportPDF}>
-              PDF
-            </Button>
-            <Button size="sm" variant="secondary" onClick={handleExportJSON}>
-              JSON
-            </Button>
-            <Button size="sm" variant="primary" onClick={handleCopyShareCode}>
-              共有コード
-            </Button>
-          </div>
+    <div className="h-[calc(100vh-64px)] flex flex-col overflow-hidden bg-gray-50">
+      {/* Toolbar */}
+      <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-2">
+          <Button size="sm" variant="secondary" onClick={handleSave}>
+            💾 保存
+          </Button>
+          <Button size="sm" variant="ghost" onClick={undo} disabled={!canUndo()}>
+            ↶
+          </Button>
+          <Button size="sm" variant="ghost" onClick={redo} disabled={!canRedo()}>
+            ↷
+          </Button>
         </div>
 
-        {/* Canvas */}
-        <div className="flex-1 overflow-auto bg-gray-100 p-8">
+        <div className="flex items-center gap-2">
+          <Button size="sm" variant="secondary" onClick={handleExportPNG}>
+            PNG
+          </Button>
+          <Button size="sm" variant="secondary" onClick={handleExportPDF}>
+            PDF
+          </Button>
+          <Button size="sm" variant="secondary" onClick={handleExportJSON}>
+            JSON
+          </Button>
+          <Button size="sm" variant="primary" onClick={handleCopyShareCode}>
+            共有コード
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Panel - アイテムライブラリ */}
+        <div className="w-64 bg-white border-r border-gray-200 flex-shrink-0">
+          <LeftPanel />
+        </div>
+
+        {/* Center - キャンバス */}
+        <div className="flex-1 overflow-auto bg-gray-100">
           <BagCanvas stageRef={stageRef} />
         </div>
-      </div>
 
-      {/* Right Panel - プロパティ & 見積 */}
-      <div className="w-80 bg-white border-l border-gray-200 overflow-y-auto">
-        <RightPanel />
+        {/* Right Panel - プロパティ & 見積 */}
+        <div className="w-80 bg-white border-l border-gray-200 overflow-y-auto flex-shrink-0">
+          <RightPanel />
+        </div>
       </div>
     </div>
   )

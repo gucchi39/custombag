@@ -11,13 +11,22 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // キャッシュを無効化して常に最新の状態を反映
+    // 強力なキャッシュ無効化設定
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      'Surrogate-Control': 'no-store',
+    },
     hmr: {
       overlay: true,
     },
     watch: {
       usePolling: true, // ファイル変更の検出を改善
+      interval: 100, // ポーリング間隔を短く
     },
+    // 厳密なOriginチェックを無効化
+    strictPort: false,
   },
   // ビルド時のキャッシュ設定
   build: {
@@ -30,4 +39,8 @@ export default defineConfig({
   },
   // 開発時のキャッシュを無効化
   cacheDir: '.vite',
+  // 依存関係の事前バンドルを強制的に再実行
+  optimizeDeps: {
+    force: true,
+  },
 })

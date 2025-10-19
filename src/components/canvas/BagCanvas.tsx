@@ -24,11 +24,22 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
 
   const { widthMM, heightMM, seamMM, elements } = currentDesign
 
-  const stageWidth = 1200
-  const stageHeight = 800
-  const scale = zoom
+  // キャンバスのサイズを画面に合わせて動的に計算
+  const padding = 100
+  const maxWidth = typeof window !== 'undefined' ? window.innerWidth - 700 : 1200
+  const maxHeight = typeof window !== 'undefined' ? window.innerHeight - 200 : 800
+  
+  // バッグのサイズに基づいてスケールを計算
+  const scaleX = (maxWidth - padding * 2) / widthMM
+  const scaleY = (maxHeight - padding * 2) / heightMM
+  const autoScale = Math.min(scaleX, scaleY, 1.5) * zoom
+  
+  const stageWidth = widthMM * autoScale + padding * 2
+  const stageHeight = heightMM * autoScale + padding * 2
+  const offsetX = padding
+  const offsetY = padding
 
-  const handleElementDragMove = (id: string, e: Konva.KonvaEventObject<DragEvent>) => {
+  const handleElementDragMove = (_id: string, e: Konva.KonvaEventObject<DragEvent>) => {
     const node = e.target
     let x = node.x()
     let y = node.y()
@@ -51,12 +62,10 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full h-full">
+    <div className="flex items-center justify-center w-full h-full p-8">
       <Stage
         width={stageWidth}
         height={stageHeight}
-        scaleX={scale}
-        scaleY={scale}
         ref={stageRef}
         onClick={e => {
           if (e.target === e.target.getStage()) {
@@ -64,7 +73,12 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
           }
         }}
       >
-        <Layer>
+        <Layer
+          x={offsetX}
+          y={offsetY}
+          scaleX={autoScale}
+          scaleY={autoScale}
+        >
           {/* グリッド */}
           {showGrid && (
             <>
