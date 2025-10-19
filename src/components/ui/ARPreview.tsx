@@ -17,18 +17,25 @@ export function ARPreview({ design, onClose }: ARPreviewProps) {
   const heightCM = Math.round(design.heightMM / 10)
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full p-8 relative">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-2xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* 閉じるボタン */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-white bg-red-500 hover:bg-red-600 rounded-full text-2xl font-bold shadow-lg transition-colors z-10"
+          title="閉じる"
         >
           ×
         </button>
 
         {/* タイトル */}
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">📱 ARで確認</h2>
+        <h2 className="text-3xl font-bold mb-6 text-gray-800 pr-12">📱 ARで確認</h2>
 
         {/* バッグ情報 */}
         <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
@@ -93,17 +100,17 @@ export function ARPreview({ design, onClose }: ARPreviewProps) {
         </div>
 
         {/* アクションボタン */}
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Button
             variant="secondary"
-            className="flex-1"
+            className="flex-1 text-lg py-3"
             onClick={onClose}
           >
-            閉じる
+            ← 戻る
           </Button>
           <Button
             variant="primary"
-            className="flex-1"
+            className="flex-1 text-lg py-3"
             onClick={() => {
               // 将来的にはQRコードをダウンロード
               alert('QRコードのダウンロード機能は準備中です')
@@ -112,6 +119,11 @@ export function ARPreview({ design, onClose }: ARPreviewProps) {
             📥 QRコードを保存
           </Button>
         </div>
+        
+        {/* モバイル用の閉じるヒント */}
+        <p className="text-center text-sm text-gray-500 mt-4">
+          💡 画面の外をタップして閉じる
+        </p>
       </div>
     </div>
   )
