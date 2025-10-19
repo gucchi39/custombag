@@ -61,6 +61,15 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
     })
   }
 
+  // バッグの色を暗くする関数（3D効果用）
+  const darkenColor = (hex: string, percent: number): string => {
+    const num = parseInt(hex.replace('#', ''), 16)
+    const r = Math.max(0, Math.floor((num >> 16) * (1 - percent)))
+    const g = Math.max(0, Math.floor(((num >> 8) & 0x00FF) * (1 - percent)))
+    const b = Math.max(0, Math.floor((num & 0x0000FF) * (1 - percent)))
+    return `rgb(${r}, ${g}, ${b})`
+  }
+
   return (
     <div className="flex items-center justify-center w-full h-full p-8 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="bg-white rounded-xl shadow-2xl p-8">
@@ -115,7 +124,39 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
             listening={false}
           />
 
-          {/* バッグ本体 */}
+          {/* 3D効果: 右側面（奥行き） */}
+          <Line
+            points={[
+              widthMM, 0,
+              widthMM + 20, -15,
+              widthMM + 20, heightMM - 15,
+              widthMM, heightMM,
+            ]}
+            fill={darkenColor(currentDesign.color, 0.3)}
+            fillAfterStrokeEnabled={true}
+            stroke="#1a1a1a"
+            strokeWidth={2}
+            closed={true}
+            listening={false}
+          />
+
+          {/* 3D効果: 底面（奥行き） */}
+          <Line
+            points={[
+              0, heightMM,
+              20, heightMM - 15,
+              widthMM + 20, heightMM - 15,
+              widthMM, heightMM,
+            ]}
+            fill={darkenColor(currentDesign.color, 0.4)}
+            fillAfterStrokeEnabled={true}
+            stroke="#1a1a1a"
+            strokeWidth={2}
+            closed={true}
+            listening={false}
+          />
+
+          {/* バッグ本体（正面） */}
           <Rect
             x={0}
             y={0}

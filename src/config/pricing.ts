@@ -40,15 +40,15 @@ export const BAG_TYPES = [
   {
     id: 'tote' as const,
     name: 'トートバッグ',
-    defaultWidth: 350,
-    defaultHeight: 400,
-    description: '縦型で収納力抜群',
+    defaultWidth: 380,
+    defaultHeight: 350,
+    description: '横長で収納力抜群',
   },
   {
     id: 'shoulder' as const,
     name: 'ショルダーバッグ',
-    defaultWidth: 300,
-    defaultHeight: 250,
-    description: '横型でコンパクト',
+    defaultWidth: 320,
+    defaultHeight: 240,
+    description: '横長でコンパクト',
   },
 ]

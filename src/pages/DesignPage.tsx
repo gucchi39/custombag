@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDesignStore } from '@/state/designStore'
 import { useGalleryStore } from '@/state/galleryStore'
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { BagCanvas } from '@/components/canvas/BagCanvas'
 import { LeftPanel } from '@/components/editor/LeftPanel'
 import { RightPanel } from '@/components/editor/RightPanel'
+import { ARPreview } from '@/components/ui/ARPreview'
 import { exportPNG } from '@/utils/export/png'
 import { exportPDF } from '@/utils/export/pdf'
 import { downloadJSON, encodeShareCode } from '@/utils/export/shareCode'
@@ -19,6 +20,7 @@ export function DesignPage() {
   const saveDesign = useGalleryStore(state => state.saveDesign)
   const showToast = useToastStore(state => state.show)
   const stageRef = useRef<Konva.Stage | null>(null)
+  const [showARPreview, setShowARPreview] = useState(false)
 
   useEffect(() => {
     if (!currentDesign) {
@@ -123,6 +125,14 @@ export function DesignPage() {
           <Button size="sm" variant="primary" onClick={handleCopyShareCode}>
             共有コード
           </Button>
+          <Button 
+            size="sm" 
+            variant="primary" 
+            onClick={() => setShowARPreview(true)}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+          >
+            📱 ARで確認
+          </Button>
         </div>
       </div>
 
@@ -142,6 +152,14 @@ export function DesignPage() {
           <RightPanel />
         </div>
       </div>
+
+      {/* ARプレビューモーダル */}
+      {showARPreview && currentDesign && (
+        <ARPreview 
+          design={currentDesign} 
+          onClose={() => setShowARPreview(false)} 
+        />
+      )}
     </div>
   )
 }
