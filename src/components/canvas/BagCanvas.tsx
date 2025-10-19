@@ -62,23 +62,24 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full h-full p-8">
-      <Stage
-        width={stageWidth}
-        height={stageHeight}
-        ref={stageRef}
-        onClick={e => {
-          if (e.target === e.target.getStage()) {
-            selectElement(null)
-          }
-        }}
-      >
-        <Layer
-          x={offsetX}
-          y={offsetY}
-          scaleX={autoScale}
-          scaleY={autoScale}
+    <div className="flex items-center justify-center w-full h-full p-8 bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="bg-white rounded-xl shadow-2xl p-8">
+        <Stage
+          width={stageWidth}
+          height={stageHeight}
+          ref={stageRef}
+          onClick={e => {
+            if (e.target === e.target.getStage()) {
+              selectElement(null)
+            }
+          }}
         >
+          <Layer
+            x={offsetX}
+            y={offsetY}
+            scaleX={autoScale}
+            scaleY={autoScale}
+          >
           {/* グリッド */}
           {showGrid && (
             <>
@@ -103,6 +104,17 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
             </>
           )}
 
+          {/* バッグの影（立体感） */}
+          <Rect
+            x={8}
+            y={8}
+            width={widthMM}
+            height={heightMM}
+            fill="rgba(0, 0, 0, 0.15)"
+            cornerRadius={5}
+            listening={false}
+          />
+
           {/* バッグ本体 */}
           <Rect
             x={0}
@@ -110,8 +122,77 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
             width={widthMM}
             height={heightMM}
             fill={currentDesign.color}
-            stroke="#333"
-            strokeWidth={2}
+            stroke="#2c2c2c"
+            strokeWidth={3}
+            cornerRadius={5}
+            shadowColor="rgba(0, 0, 0, 0.2)"
+            shadowBlur={10}
+            shadowOffsetX={2}
+            shadowOffsetY={2}
+            listening={false}
+          />
+
+          {/* 持ち手（ハンドル） */}
+          {currentDesign.bagType === 'tote' && (
+            <>
+              {/* 左の持ち手 */}
+              <Line
+                points={[
+                  widthMM * 0.3, -5,
+                  widthMM * 0.3, -30,
+                  widthMM * 0.4, -40,
+                  widthMM * 0.4, -30,
+                  widthMM * 0.4, -5,
+                ]}
+                stroke="#2c2c2c"
+                strokeWidth={8}
+                lineCap="round"
+                lineJoin="round"
+                listening={false}
+              />
+              {/* 右の持ち手 */}
+              <Line
+                points={[
+                  widthMM * 0.6, -5,
+                  widthMM * 0.6, -30,
+                  widthMM * 0.7, -40,
+                  widthMM * 0.7, -30,
+                  widthMM * 0.7, -5,
+                ]}
+                stroke="#2c2c2c"
+                strokeWidth={8}
+                lineCap="round"
+                lineJoin="round"
+                listening={false}
+              />
+            </>
+          )}
+
+          {/* ショルダーストラップ */}
+          {currentDesign.bagType === 'shoulder' && (
+            <Line
+              points={[
+                widthMM * 0.85, 20,
+                widthMM * 0.95, -20,
+                widthMM * 1.05, -40,
+              ]}
+              stroke="#2c2c2c"
+              strokeWidth={6}
+              lineCap="round"
+              listening={false}
+            />
+          )}
+
+          {/* ステッチ（縫い目）装飾 */}
+          <Rect
+            x={5}
+            y={5}
+            width={widthMM - 10}
+            height={heightMM - 10}
+            stroke="rgba(0, 0, 0, 0.3)"
+            strokeWidth={1}
+            dash={[8, 4]}
+            cornerRadius={3}
             listening={false}
           />
 
@@ -299,7 +380,8 @@ export function BagCanvas({ stageRef }: BagCanvasProps) {
             )
           })}
         </Layer>
-      </Stage>
+        </Stage>
+      </div>
     </div>
   )
 }
