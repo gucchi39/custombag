@@ -6,7 +6,12 @@ import { DesignElement } from '@/types/design'
 export function LeftPanel() {
   const { currentDesign, addElement } = useDesignStore()
 
-  if (!currentDesign) return null
+  console.log('LeftPanel rendering, currentDesign:', currentDesign)
+
+  if (!currentDesign) {
+    console.log('LeftPanel: No design, returning null')
+    return null
+  }
 
   const handleAddWindow = (shape: 'rectangle' | 'circle') => {
     const defaults = ELEMENT_DEFAULTS.window[shape]

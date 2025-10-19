@@ -24,7 +24,9 @@ export function HomePage() {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     }
+    console.log('Creating new design:', newDesign)
     setDesign(newDesign)
+    console.log('Navigating to /design')
     navigate('/design')
   }
 

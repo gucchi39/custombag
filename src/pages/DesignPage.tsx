@@ -22,7 +22,10 @@ export function DesignPage() {
 
   useEffect(() => {
     if (!currentDesign) {
+      console.log('No design found, redirecting to home')
       navigate('/')
+    } else {
+      console.log('Design loaded:', currentDesign)
     }
   }, [currentDesign, navigate])
 

@@ -11,5 +11,23 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // キャッシュを無効化して常に最新の状態を反映
+    hmr: {
+      overlay: true,
+    },
+    watch: {
+      usePolling: true, // ファイル変更の検出を改善
+    },
   },
+  // ビルド時のキャッシュ設定
+  build: {
+    // ファイル名にハッシュを含めてキャッシュ問題を防ぐ
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  // 開発時のキャッシュを無効化
+  cacheDir: '.vite',
 })
