@@ -11,6 +11,23 @@ export interface Design {
   priceJPY: number
   createdAt: number
   updatedAt: number
+  // SNS機能用
+  isPublic?: boolean // 公開設定
+  authorName?: string // 投稿者名
+  description?: string // バッグの説明
+  tags?: string[] // タグ（#推し名など）
+  likes?: number // いいね数
+  comments?: Comment[] // コメント
+  views?: number // 閲覧数
+}
+
+// コメントの型
+export interface Comment {
+  id: string
+  authorName: string
+  text: string
+  createdAt: number
+  likes?: number
 }
 
 // デザイン要素の型

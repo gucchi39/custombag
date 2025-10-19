@@ -66,6 +66,18 @@ export function DesignPage() {
     }
   }
 
+  const handlePublish = () => {
+    if (currentDesign) {
+      const isPublic = !currentDesign.isPublic
+      const updatedDesign = { ...currentDesign, isPublic }
+      saveDesign(updatedDesign)
+      showToast(
+        isPublic ? '🎉 みんなに公開しました！' : '🔒 非公開にしました',
+        'success'
+      )
+    }
+  }
+
   const handleExportPNG = () => {
     if (stageRef.current && currentDesign) {
       exportPNG(stageRef.current, currentDesign)
@@ -113,6 +125,17 @@ export function DesignPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button 
+            size="sm" 
+            variant={currentDesign.isPublic ? 'primary' : 'secondary'}
+            onClick={handlePublish}
+            className={currentDesign.isPublic 
+              ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600' 
+              : ''}
+          >
+            {currentDesign.isPublic ? '🌐 公開中' : '🔒 投稿する'}
+          </Button>
+          <div className="w-px h-6 bg-gray-300" />
           <Button size="sm" variant="secondary" onClick={handleExportPNG}>
             PNG
           </Button>

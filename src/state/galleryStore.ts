@@ -8,6 +8,7 @@ interface GalleryState {
   designs: Design[]
   loadDesigns: () => void
   saveDesign: (design: Design) => void
+  updateDesign: (id: string, updates: Partial<Design>) => void
   deleteDesign: (id: string) => void
   initializeSeeds: () => void
 }
@@ -20,7 +21,16 @@ export const useGalleryStore = create<GalleryState>(set => ({
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
         const designs = JSON.parse(stored) as Design[]
-        set({ designs })
+        // 公開投稿が1件もない場合はサンプルデータを追加
+        const publicDesigns = designs.filter(d => d.isPublic === true)
+        if (publicDesigns.length === 0) {
+          // ユーザーのデザインとサンプルデザインをマージ
+          const mergedDesigns = [...SEED_DESIGNS, ...designs]
+          set({ designs: mergedDesigns })
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedDesigns))
+        } else {
+          set({ designs })
+        }
       } else {
         // 初回起動時はSeedを投入
         set({ designs: [...SEED_DESIGNS] })
@@ -51,6 +61,22 @@ export const useGalleryStore = create<GalleryState>(set => ({
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newDesigns))
       } catch (error) {
         console.error('Failed to save design:', error)
+      }
+
+      return { designs: newDesigns }
+    })
+  },
+
+  updateDesign: (id, updates) => {
+    set(state => {
+      const newDesigns = state.designs.map(d =>
+        d.id === id ? { ...d, ...updates } : d
+      )
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newDesigns))
+      } catch (error) {
+        console.error('Failed to update design:', error)
       }
 
       return { designs: newDesigns }
