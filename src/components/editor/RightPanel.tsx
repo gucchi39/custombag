@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDesignStore } from '@/state/designStore'
 import { BAG_COLORS, BAG_TYPES } from '@/config/pricing'
 import { Button } from '@/components/ui/Button'

@@ -24,7 +24,7 @@ describe('Badge Packer', () => {
     // 格子状に配置されていることを確認（近似チェック）
     if (positions.length >= 4) {
       const pitch = 75 + 15
-      const firstRow = positions.filter((p, i) => i < 3)
+      const firstRow = positions.filter((_, i) => i < 3)
       
       // X座標の差がpitchに近いことを確認
       if (firstRow.length >= 2) {

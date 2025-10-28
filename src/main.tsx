@@ -10,7 +10,7 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/custombag">
       <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1">

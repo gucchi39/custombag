@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useToastStore } from '@/state/toastStore'
 import clsx from 'clsx'
 

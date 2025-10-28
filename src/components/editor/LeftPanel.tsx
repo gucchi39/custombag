@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDesignStore } from '@/state/designStore'
 import { ITEM_LIBRARY, ELEMENT_DEFAULTS } from '@/data/items'
 import { DesignElement } from '@/types/design'
@@ -23,7 +23,9 @@ export function LeftPanel() {
       type: 'window',
       xMM: 50,
       yMM: 50,
-      ...(shape === 'circle' ? { rMM: defaults.rMM } : { wMM: defaults.wMM, hMM: defaults.hMM }),
+      ...(shape === 'circle' 
+        ? { rMM: (defaults as any).rMM } 
+        : { wMM: (defaults as any).wMM, hMM: (defaults as any).hMM }),
       props: defaults.props,
       zIndex: currentDesign.elements.length,
     }
