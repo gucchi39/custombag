@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Design } from '@/types/design'
 import { Button } from './Button'
-import '@google/model-viewer'
+
+// model-viewerを動的にインポート
+if (typeof window !== 'undefined') {
+  import('@google/model-viewer')
+}
 
 interface ARViewerV2Props {
   design: Design
@@ -162,37 +166,60 @@ export function ARViewerV2({ design, onClose }: ARViewerV2Props) {
             <div>デバイス: {isIOS ? 'iOS' : isAndroid ? 'Android' : 'PC'}</div>
           </div>
 
-          {/* 3Dプレビュー */}
+          {/* 3Dプレビュー & AR起動 */}
           {!isLoading && !error && modelUrl && (
-            <div className="bg-gray-50 rounded-xl p-6 mb-6">
-              <h3 className="text-lg font-bold mb-4 text-gray-800">3Dプレビュー</h3>
-              <model-viewer
-                ref={modelViewerRef}
-                src={modelUrl}
-                alt="カスタムバッグの3Dモデル"
-                ar
-                ar-modes={isIOS ? "quick-look" : "scene-viewer webxr"}
-                camera-controls
-                touch-action="pan-y"
-                auto-rotate
-                shadow-intensity="1"
-                style={{
-                  width: '100%',
-                  height: '400px',
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: '0.75rem'
-                }}
-              >
-                {isMobile && (
-                  <button
-                    slot="ar-button"
-                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-2xl hover:bg-purple-700 transition-colors"
+            <>
+              {/* iOS Quick Look直接起動 */}
+              {isIOS && (
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-8 mb-6 text-center">
+                  <div className="text-6xl mb-4">📱</div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-800">ARで実物確認</h3>
+                  <p className="text-gray-600 mb-6">
+                    iOS Quick Lookで実寸大のバッグを表示します
+                  </p>
+                  <a
+                    href={modelUrl}
+                    rel="ar"
+                    className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105"
                   >
                     🎯 ARで見る
-                  </button>
-                )}
-              </model-viewer>
-            </div>
+                  </a>
+                </div>
+              )}
+
+              {/* Android/PCの場合はmodel-viewer */}
+              {!isIOS && (
+                <div className="bg-gray-50 rounded-xl p-6 mb-6">
+                  <h3 className="text-lg font-bold mb-4 text-gray-800">3Dプレビュー</h3>
+                  <model-viewer
+                    ref={modelViewerRef}
+                    src={modelUrl}
+                    alt="カスタムバッグの3Dモデル"
+                    ar
+                    ar-modes="scene-viewer webxr"
+                    camera-controls
+                    touch-action="pan-y"
+                    auto-rotate
+                    shadow-intensity="1"
+                    style={{
+                      width: '100%',
+                      height: '400px',
+                      backgroundColor: '#f5f5f5',
+                      borderRadius: '0.75rem'
+                    }}
+                  >
+                    {isAndroid && (
+                      <button
+                        slot="ar-button"
+                        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-2xl hover:bg-purple-700 transition-colors"
+                      >
+                        🎯 ARで見る
+                      </button>
+                    )}
+                  </model-viewer>
+                </div>
+              )}
+            </>
           )}
 
           {/* ローディング */}
