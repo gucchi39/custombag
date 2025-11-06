@@ -154,6 +154,14 @@ export function ARViewerV2({ design, onClose }: ARViewerV2Props) {
             </div>
           </div>
 
+          {/* デバッグ情報 */}
+          <div className="bg-blue-50 rounded-lg p-3 mb-4 text-sm">
+            <div>ローディング: {isLoading ? 'はい' : 'いいえ'}</div>
+            <div>エラー: {error || 'なし'}</div>
+            <div>モデルURL: {modelUrl ? 'あり' : 'なし'}</div>
+            <div>デバイス: {isIOS ? 'iOS' : isAndroid ? 'Android' : 'PC'}</div>
+          </div>
+
           {/* 3Dプレビュー */}
           {!isLoading && !error && modelUrl && (
             <div className="bg-gray-50 rounded-xl p-6 mb-6">
