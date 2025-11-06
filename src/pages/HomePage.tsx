@@ -16,19 +16,27 @@ export function HomePage() {
 
   // URLハッシュからARデザインを読み込む
   useEffect(() => {
+    console.log('🔍 Current URL:', window.location.href)
+    console.log('🔍 Current hash:', window.location.hash)
+    
     const hash = window.location.hash
     if (hash.startsWith('#ar=')) {
+      console.log('✅ AR hash detected!')
       try {
         const shareCode = hash.substring(4) // '#ar='を除去
+        console.log('📦 Share code:', shareCode.substring(0, 50) + '...')
         const design = decodeShareCode(shareCode)
+        console.log('✅ Design decoded successfully:', design)
         setArDesign(design)
         setShowARViewer(true)
         // ハッシュをクリア（オプション）
         // window.history.replaceState(null, '', window.location.pathname)
       } catch (err) {
-        console.error('ARデザインの読み込みエラー:', err)
+        console.error('❌ ARデザインの読み込みエラー:', err)
         alert('QRコードが無効です。デザインを読み込めませんでした。')
       }
+    } else {
+      console.log('ℹ️ No AR hash found')
     }
   }, [])
 
