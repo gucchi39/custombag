@@ -15,15 +15,19 @@
     "install-playwright": "npx playwright install"
   },
   "dependencies": {
+    "@types/qrcode": "^1.5.6",
+    "@types/three": "^0.181.0",
     "clsx": "^2.0.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "konva": "^9.3.0",
     "lz-string": "^1.5.0",
+    "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.10",
     "react-router-dom": "^6.20.0",
+    "three": "^0.181.0",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

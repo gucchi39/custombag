@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import QRCode from 'qrcode'
 import { Design } from '@/types/design'
 import { Button } from './Button'
+import { ARViewer } from './ARViewer'
+import { encodeShareCode } from '@/utils/export/shareCode'
 
 interface ARPreviewProps {
   design: Design
@@ -8,13 +11,56 @@ interface ARPreviewProps {
 }
 
 export function ARPreview({ design, onClose }: ARPreviewProps) {
+  const [showARViewer, setShowARViewer] = useState(false)
+  const [qrCodeDataURL, setQrCodeDataURL] = useState<string>('')
   const [isARSupported] = useState(() => {
     // WebXR APIのサポートチェック
     return 'xr' in navigator
   })
 
+  // QRコード生成
+  useEffect(() => {
+    const generateQRCode = async () => {
+      try {
+        // デザインをエンコードしてURLを生成
+        const shareCode = encodeShareCode(design)
+        const arURL = `${window.location.origin}${window.location.pathname}#ar=${shareCode}`
+        
+        // QRコード生成
+        const dataURL = await QRCode.toDataURL(arURL, {
+          width: 256,
+          margin: 2,
+          color: {
+            dark: '#000000',
+            light: '#FFFFFF'
+          }
+        })
+        setQrCodeDataURL(dataURL)
+      } catch (err) {
+        console.error('QRコード生成エラー:', err)
+      }
+    }
+
+    generateQRCode()
+  }, [design])
+
+  // ARビューアーを表示
+  if (showARViewer) {
+    return <ARViewer design={design} onClose={() => setShowARViewer(false)} />
+  }
+
   const widthCM = Math.round(design.widthMM / 10)
   const heightCM = Math.round(design.heightMM / 10)
+
+  // QRコードをダウンロード
+  const downloadQRCode = () => {
+    if (!qrCodeDataURL) return
+    
+    const link = document.createElement('a')
+    link.download = `bag-ar-qrcode-${Date.now()}.png`
+    link.href = qrCodeDataURL
+    link.click()
+  }
 
   return (
     <div 
@@ -68,18 +114,32 @@ export function ARPreview({ design, onClose }: ARPreviewProps) {
           </ol>
         </div>
 
-        {/* QRコードプレースホルダー */}
+        {/* QRコード表示 */}
         <div className="bg-gray-100 rounded-xl p-8 mb-6 flex flex-col items-center">
-          <div className="w-48 h-48 bg-white rounded-lg shadow-lg flex items-center justify-center mb-4 border-4 border-gray-300">
-            <div className="text-center">
-              <div className="text-6xl mb-2">📱</div>
-              <div className="text-sm text-gray-600">QRコード</div>
-              <div className="text-xs text-gray-500 mt-1">スマホでスキャン</div>
+          {qrCodeDataURL ? (
+            <>
+              <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                <img 
+                  src={qrCodeDataURL} 
+                  alt="AR QRコード" 
+                  className="w-48 h-48"
+                />
+              </div>
+              <p className="text-sm text-gray-700 text-center font-medium mb-2">
+                📱 スマホでスキャンしてAR表示
+              </p>
+              <p className="text-xs text-gray-500 text-center">
+                カメラアプリでQRコードを読み取ってください
+              </p>
+            </>
+          ) : (
+            <div className="w-48 h-48 bg-white rounded-lg shadow-lg flex items-center justify-center mb-4">
+              <div className="text-center">
+                <div className="text-4xl mb-2">⏳</div>
+                <div className="text-sm text-gray-600">QRコード生成中...</div>
+              </div>
             </div>
-          </div>
-          <p className="text-sm text-gray-600 text-center">
-            ※ AR機能は現在準備中です
-          </p>
+          )}
         </div>
 
         {/* AR対応状況 */}
@@ -100,24 +160,45 @@ export function ARPreview({ design, onClose }: ARPreviewProps) {
         </div>
 
         {/* アクションボタン */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            variant="secondary"
-            className="flex-1 text-lg py-3"
-            onClick={onClose}
-          >
-            ← 戻る
-          </Button>
+        <div className="flex flex-col gap-3">
+          {/* PCの場合：QRコードをダウンロード、スマホの場合：直接AR起動 */}
           <Button
             variant="primary"
-            className="flex-1 text-lg py-3"
+            className="w-full text-lg py-3"
             onClick={() => {
-              // 将来的にはQRコードをダウンロード
-              alert('QRコードのダウンロード機能は準備中です')
+              // スマホの場合は直接AR起動
+              if (/iPhone|iPad|Android/i.test(navigator.userAgent)) {
+                setShowARViewer(true)
+              } else {
+                // PCの場合はQRコードダウンロード
+                downloadQRCode()
+              }
             }}
+            disabled={!qrCodeDataURL}
           >
-            📥 QRコードを保存
+            {/iPhone|iPad|Android/i.test(navigator.userAgent) 
+              ? '🎯 ARを起動' 
+              : '📥 QRコードを保存'}
           </Button>
+          
+          <div className="flex gap-3">
+            <Button
+              variant="secondary"
+              className="flex-1"
+              onClick={onClose}
+            >
+              ← 戻る
+            </Button>
+            {!/iPhone|iPad|Android/i.test(navigator.userAgent) && (
+              <Button
+                variant="ghost"
+                className="flex-1"
+                onClick={() => setShowARViewer(true)}
+              >
+                🧪 テスト起動
+              </Button>
+            )}
+          </div>
         </div>
         
         {/* モバイル用の閉じるヒント */}
