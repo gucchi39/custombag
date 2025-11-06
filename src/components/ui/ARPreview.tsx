@@ -24,7 +24,9 @@ export function ARPreview({ design, onClose }: ARPreviewProps) {
       try {
         // デザインをエンコードしてURLを生成
         const shareCode = encodeShareCode(design)
-        const arURL = `${window.location.origin}${window.location.pathname}#ar=${shareCode}`
+        // GitHub Pagesの正しいベースURLを使用
+        const baseURL = window.location.origin + '/custombag/'
+        const arURL = `${baseURL}#ar=${shareCode}`
         
         // QRコード生成
         const dataURL = await QRCode.toDataURL(arURL, {

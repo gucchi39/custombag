@@ -1,13 +1,36 @@
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { SEED_DESIGNS } from '@/data/seeds'
 import { useDesignStore } from '@/state/designStore'
 import { BAG_TYPES } from '@/config/pricing'
+import { ARViewer } from '@/components/ui/ARViewer'
+import { decodeShareCode } from '@/utils/export/shareCode'
 
 export function HomePage() {
   const navigate = useNavigate()
   const setDesign = useDesignStore(state => state.setDesign)
+  const [arDesign, setArDesign] = useState<any>(null)
+  const [showARViewer, setShowARViewer] = useState(false)
+
+  // URLハッシュからARデザインを読み込む
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash.startsWith('#ar=')) {
+      try {
+        const shareCode = hash.substring(4) // '#ar='を除去
+        const design = decodeShareCode(shareCode)
+        setArDesign(design)
+        setShowARViewer(true)
+        // ハッシュをクリア（オプション）
+        // window.history.replaceState(null, '', window.location.pathname)
+      } catch (err) {
+        console.error('ARデザインの読み込みエラー:', err)
+        alert('QRコードが無効です。デザインを読み込めませんでした。')
+      }
+    }
+  }, [])
 
   // 開発用：Seedデータをリセット
   const handleResetSeeds = () => {
@@ -50,6 +73,21 @@ export function HomePage() {
       setDesign(newDesign)
       navigate('/design')
     }
+  }
+
+  // ARビューアーを表示
+  if (showARViewer && arDesign) {
+    return (
+      <ARViewer 
+        design={arDesign} 
+        onClose={() => {
+          setShowARViewer(false)
+          setArDesign(null)
+          // ハッシュをクリア
+          window.history.replaceState(null, '', window.location.pathname)
+        }} 
+      />
+    )
   }
 
   return (
