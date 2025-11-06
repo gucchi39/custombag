@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import { Design } from '@/types/design'
 import { Button } from './Button'
-import { ARViewer } from './ARViewer'
+import { ARViewerV2 } from './ARViewerV2'
 import { encodeShareCode } from '@/utils/export/shareCode'
 
 interface ARPreviewProps {
@@ -50,7 +50,7 @@ export function ARPreview({ design, onClose }: ARPreviewProps) {
 
   // ARビューアーを表示
   if (showARViewer) {
-    return <ARViewer design={design} onClose={() => setShowARViewer(false)} />
+    return <ARViewerV2 design={design} onClose={() => setShowARViewer(false)} />
   }
 
   const widthCM = Math.round(design.widthMM / 10)

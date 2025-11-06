@@ -15,6 +15,7 @@
     "install-playwright": "npx playwright install"
   },
   "dependencies": {
+    "@google/model-viewer": "^4.1.0",
     "@types/qrcode": "^1.5.6",
     "@types/three": "^0.181.0",
     "clsx": "^2.0.0",

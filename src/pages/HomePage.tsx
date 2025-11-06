@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card'
 import { SEED_DESIGNS } from '@/data/seeds'
 import { useDesignStore } from '@/state/designStore'
 import { BAG_TYPES } from '@/config/pricing'
-import { ARViewer } from '@/components/ui/ARViewer'
+import { ARViewerV2 } from '@/components/ui/ARViewerV2'
 import { decodeShareCode } from '@/utils/export/shareCode'
 
 export function HomePage() {
@@ -86,7 +86,7 @@ export function HomePage() {
   // ARビューアーを表示
   if (showARViewer && arDesign) {
     return (
-      <ARViewer 
+      <ARViewerV2 
         design={arDesign} 
         onClose={() => {
           setShowARViewer(false)
